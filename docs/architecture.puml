@@ -1,0 +1,18 @@
+@startuml
+!define Kubernetes https://kubernetes.io
+skinparam backgroundColor #FFFFFF
+actor User
+node "Control Plane" {
+  component API
+  component Scheduler
+  component Controller
+}
+node "Worker Nodes" {
+  component Kubelet
+  component Proxy
+}
+User -> API: deploy
+API --> Scheduler
+Scheduler --> Controller
+Controller --> Kubelet
+@enduml

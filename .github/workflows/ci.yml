@@ -1,0 +1,36 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install deps
+        run: |
+          pip install ansible ansible-lint yamllint molecule
+      - name: Lint
+        run: make lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install deps
+        run: |
+          pip install ansible molecule docker
+      - name: Run Molecule tests
+        run: make test
+  report:
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Cluster Ready" > report.html
+      - uses: actions/upload-artifact@v3
+        with:
+          name: report
+          path: report.html

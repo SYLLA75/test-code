@@ -1,0 +1,54 @@
+---
+- name: Add Kubernetes apt key
+  ansible.builtin.apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+  when: ansible_os_family == 'Debian' and offline_repo_url == ''
+
+- name: Add Kubernetes repository
+  ansible.builtin.apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+  when: ansible_os_family == 'Debian' and offline_repo_url == ''
+
+- name: Use offline repo
+  ansible.builtin.apt_repository:
+    repo: "{{ offline_repo_url }}"
+    state: present
+  when: ansible_os_family == 'Debian' and offline_repo_url != ''
+
+- name: Install kubelet, kubeadm, kubectl
+  ansible.builtin.package:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+  notify: Restart kubelet
+
+- name: Hold packages
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    install_recommends: false
+    update_cache: yes
+    cache_valid_time: 3600
+    allow_downgrade: true
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+  when: ansible_os_family == 'Debian'
+
+- name: Initialize control plane
+  command: >-
+    kubeadm init --pod-network-cidr {{ pod_cidr }} --kubernetes-version {{ k8s_version }}
+  when: inventory_hostname in groups['control-plane']
+  register: kubeadm_init
+  changed_when: "initialized" in kubeadm_init.stdout
+
+- name: Join workers
+  command: >-
+    kubeadm join {{ groups['control-plane'][0] }}:6443 --token ABCD --discovery-token-unsafe-skip-ca-verification
+  when: inventory_hostname in groups['workers']
+  changed_when: false

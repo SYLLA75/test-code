@@ -1,0 +1,5 @@
+---
+- name: Taint control plane nodes
+  ansible.builtin.command: kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+  when: inventory_hostname in groups['control-plane'] and not enable_ha
+  changed_when: false

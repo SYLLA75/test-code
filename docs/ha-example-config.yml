@@ -1,0 +1,11 @@
+cluster_name: ha-cluster
+ssh_user: ubuntu
+private_key_path: ~/.ssh/id_rsa
+control_plane:
+  - 192.168.56.10
+  - 192.168.56.20
+  - 192.168.56.30
+workers:
+  - 192.168.56.11
+  - 192.168.56.12
+enable_ha: true

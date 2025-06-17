@@ -1,0 +1,18 @@
+---
+- name: Install CNI plugin
+  ansible.builtin.command: >-
+    kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+  when: cni_plugin == 'calico' and inventory_hostname in groups['control-plane']
+  changed_when: false
+
+- name: Install Flannel
+  ansible.builtin.command: >-
+    kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+  when: cni_plugin == 'flannel' and inventory_hostname in groups['control-plane']
+  changed_when: false
+
+- name: Install Cilium
+  ansible.builtin.command: >-
+    kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/v1.15/install/kubernetes/quick-install.yaml
+  when: cni_plugin == 'cilium' and inventory_hostname in groups['control-plane']
+  changed_when: false
