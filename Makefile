@@ -1,17 +1,21 @@
-.PHONY: lint test deploy ui inventory
+.PHONY: up down ui lint test example-db
+
+up:
+	docker compose up -d
+
+down:
+	docker compose down
+
+ui:
+	FLASK_APP=ui.app flask run --reload
 
 lint:
 	ansible-lint ansible/*.yml ansible/roles
 	yamllint ansible
 
-inventory:
-	python generate_inventory.py
+
+example-db:
+	python tools/create_example_db.py
 
 test:
-	molecule test
-
-deploy: inventory
-	ansible-playbook -i ansible/inventory.ini ansible/site.yml
-
-ui:
-	python ui/app.py
+	pytest
