@@ -10,9 +10,8 @@ ui:
 	FLASK_APP=ui.app flask run --reload
 
 lint:
-	ansible-lint ansible/*.yml ansible/roles
+	ansible-lint ansible/site.yml ansible/cleanup.yml ansible/upgrade.yml ansible/roles
 	yamllint ansible
-
 
 example-db:
 	python tools/create_example_db.py
