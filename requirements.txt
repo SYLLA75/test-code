@@ -1,0 +1,5 @@
+ansible>=2.17
+ansible-lint
+yamllint
+molecule
+flask

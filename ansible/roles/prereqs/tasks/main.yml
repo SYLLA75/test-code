@@ -1,0 +1,23 @@
+---
+- name: Install prerequisites
+  ansible.builtin.package:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+    state: present
+  when: ansible_os_family == 'Debian'
+  notify: Update apt cache
+
+- name: Disable swap
+  ansible.posix.sysctl:
+    name: vm.swappiness
+    value: '0'
+    sysctl_set: yes
+    state: present
+    reload: yes
+
+- name: Turn off swap
+  ansible.builtin.command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+  changed_when: false

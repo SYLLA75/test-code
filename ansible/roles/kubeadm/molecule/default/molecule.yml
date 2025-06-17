@@ -1,0 +1,12 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: docker.io/geerlingguy/docker-centos9-ansible:latest
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

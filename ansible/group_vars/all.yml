@@ -1,0 +1,8 @@
+# Global variables for Kubernetes deployment
+k8s_version: "stable"
+cni_plugin: "calico"  # calico|flannel|cilium
+pod_cidr: "10.244.0.0/16"
+service_cidr: "10.96.0.0/12"
+enable_ha: false
+cri_impl: "containerd"  # containerd|crio
+offline_repo_url: ""

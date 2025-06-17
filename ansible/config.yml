@@ -1,0 +1,8 @@
+cluster_name: demo-cluster
+ssh_user: ubuntu
+private_key_path: ~/.ssh/id_rsa
+control_plane:
+  - 192.168.56.10
+workers:
+  - 192.168.56.11
+  - 192.168.56.12

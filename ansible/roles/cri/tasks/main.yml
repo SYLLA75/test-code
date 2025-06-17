@@ -1,0 +1,14 @@
+---
+- name: Install containerd
+  ansible.builtin.package:
+    name: containerd
+    state: present
+  when: cri_impl == 'containerd'
+  notify: Restart containerd
+
+- name: Install CRI-O
+  ansible.builtin.package:
+    name: cri-o
+    state: present
+  when: cri_impl == 'crio'
+  notify: Restart crio
