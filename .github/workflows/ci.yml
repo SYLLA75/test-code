@@ -10,7 +10,11 @@ jobs:
           python-version: '3.x'
       - name: Install deps
         run: |
-          pip install ansible ansible-lint yamllint molecule
+          pip install -r requirements.txt
+      - name: Prepare example database
+        run: python tools/create_example_db.py
+      - name: Prepare files
+        run: python tools/generate_files.py --db database/example.db
       - name: Lint
         run: make lint
   test:
@@ -22,7 +26,11 @@ jobs:
           python-version: '3.x'
       - name: Install deps
         run: |
-          pip install ansible molecule docker
+          pip install -r requirements.txt
+      - name: Prepare example database
+        run: python tools/create_example_db.py
+      - name: Prepare files
+        run: python tools/generate_files.py --db database/example.db
       - name: Run Molecule tests
         run: make test
   report:
